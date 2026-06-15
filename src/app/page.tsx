@@ -125,9 +125,9 @@ export default function Home() {
   return (
     <div className="min-h-full flex flex-col mesh-bg text-foreground transition-colors duration-300 bg-grid-pattern relative overflow-hidden">
       {/* Immersive Background glow blobs */}
-      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-indigo-500/10 blur-[100px] pointer-events-none animate-float-slow" />
-      <div className="absolute top-1/3 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-pink-500/10 blur-[120px] pointer-events-none animate-float-medium" />
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-cyan-500/5 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] rounded-full bg-indigo-500/15 dark:bg-indigo-500/10 blur-[100px] pointer-events-none animate-float-slow" />
+      <div className="absolute top-1/3 right-1/4 translate-x-1/2 translate-y-1/2 w-[400px] h-[400px] rounded-full bg-pink-500/15 dark:bg-pink-500/10 blur-[120px] pointer-events-none animate-float-medium" />
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full bg-cyan-500/8 dark:bg-cyan-500/5 blur-[100px] pointer-events-none" />
 
       <Navbar />
 
@@ -151,7 +151,7 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.1 }}
           >
             Your GitHub Profile Has a <span className="text-gradient-primary">Story.</span><br />
-            <span className="text-neutral-400 dark:text-neutral-500">Let&apos;s Tell It.</span>
+            <span className="text-neutral-500 dark:text-neutral-400">Let&apos;s Tell It.</span>
           </motion.h1>
 
           <motion.p 
@@ -179,7 +179,7 @@ export default function Home() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={isLoading}
-                className="pl-8 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-neutral-800 bg-white/40 dark:bg-black/20 backdrop-blur-md h-12 rounded-lg font-mono text-sm focus:border-indigo-500 dark:focus:border-primary/60 transition-all duration-200"
+                className="pl-8 text-neutral-800 dark:text-neutral-200 border-neutral-300 dark:border-neutral-800 bg-white/75 dark:bg-black/20 backdrop-blur-md h-12 rounded-lg font-mono text-sm focus:border-indigo-500 dark:focus:border-primary/60 transition-all duration-200"
               />
             </div>
             <Button

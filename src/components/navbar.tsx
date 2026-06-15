@@ -9,7 +9,7 @@ export function Navbar() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 dark:border-white/5 bg-background/60 backdrop-blur-xl transition-all duration-300">
+    <header className="sticky top-0 z-50 w-full border-b border-neutral-200/50 dark:border-white/5 bg-background/60 backdrop-blur-xl transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2.5 group hover:opacity-95 transition-opacity">
           <div className="p-1.5 rounded-lg bg-indigo-500/10 dark:bg-primary/15 border border-indigo-500/20 dark:border-primary/20 group-hover:shadow-[0_0_15px_rgba(139,92,246,0.3)] transition-all duration-300">
