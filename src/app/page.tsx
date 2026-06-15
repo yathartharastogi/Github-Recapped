@@ -17,7 +17,10 @@ import {
   Code2, 
   Award,
   ArrowRight,
-  TrendingUp
+  TrendingUp,
+  GitCommit,
+  Users,
+  BookOpen
 } from "lucide-react";
 
 export default function Home() {
@@ -37,57 +40,58 @@ export default function Home() {
     router.push(`/story/${demoUser}`);
   };
 
-  // Demo profiles details
-  const demoProfiles = [
+  // Live telemetry stats
+  const globalStats = [
     {
-      name: "Yathartha Rastogi",
-      username: "yathartha09",
-      avatar: "https://github.com/yathartha09.png",
-      role: "Creator",
-      contributions: "1,420",
-      streak: "18 days",
-      repos: "34",
-      language: "TypeScript",
-      glowColor: "rgba(6, 182, 212, 0.2)",
-      bgGradient: "from-cyan-500/10 to-indigo-500/10"
+      label: "Total Commits Analyzed",
+      value: "24,842,910",
+      subtext: "+124k today",
+      icon: GitCommit,
+      colorClass: "text-indigo-500"
     },
     {
-      name: "Linus Torvalds",
-      username: "torvalds",
-      avatar: "https://github.com/torvalds.png",
-      role: "OS Maintainer",
-      contributions: "5,800+",
-      streak: "45 days",
-      repos: "8",
-      language: "C",
-      glowColor: "rgba(245, 158, 11, 0.2)",
-      bgGradient: "from-yellow-500/10 to-red-500/10"
+      label: "Profiles Synced",
+      value: "18,421",
+      subtext: "Developers globally",
+      icon: Users,
+      colorClass: "text-cyan-500"
     },
     {
-      name: "Evan You",
-      username: "yyx990803",
-      avatar: "https://github.com/yyx990803.png",
-      role: "Tech Architect",
-      contributions: "4,200+",
-      streak: "32 days",
-      repos: "184",
-      language: "JavaScript",
-      glowColor: "rgba(167, 139, 250, 0.2)",
-      bgGradient: "from-purple-500/10 to-pink-500/10"
+      label: "Peak Coding Streak",
+      value: "365 Days",
+      subtext: "Logged by @torvalds",
+      icon: Flame,
+      colorClass: "text-amber-500"
     },
     {
-      name: "Dan Abramov",
-      username: "gaearon",
-      avatar: "https://github.com/gaearon.png",
-      role: "UI Engineer",
-      contributions: "2,900+",
-      streak: "22 days",
-      repos: "112",
-      language: "React/JS",
-      glowColor: "rgba(236, 72, 153, 0.2)",
-      bgGradient: "from-pink-500/10 to-rose-500/10"
+      label: "Repositories Scanned",
+      value: "348,290",
+      subtext: "Public repos scanned",
+      icon: BookOpen,
+      colorClass: "text-pink-500"
     }
   ];
+
+  const languageDistribution = [
+    { name: "TypeScript", percentage: 34.2, color: "bg-blue-500 shadow-blue-500/20" },
+    { name: "JavaScript", percentage: 22.5, color: "bg-yellow-500 shadow-yellow-500/20" },
+    { name: "Python", percentage: 18.1, color: "bg-green-500 shadow-green-500/20" },
+    { name: "Go", percentage: 10.4, color: "bg-cyan-500 shadow-cyan-500/20" },
+    { name: "Rust", percentage: 8.8, color: "bg-orange-500 shadow-orange-500/20" },
+    { name: "C/C++", percentage: 6.0, color: "bg-red-500 shadow-red-500/20" }
+  ];
+
+  // Mock activity level density grid (7 days, 24 hours)
+  const heatmapData = [
+    [0,0,0,0,0,0,1,1,2,2,2,3,3,2,2,3,3,3,2,2,1,1,0,0], // Mon
+    [0,0,0,0,0,1,1,2,2,2,3,3,3,3,3,3,3,3,2,2,2,1,0,0], // Tue
+    [0,0,0,0,0,1,1,2,3,3,3,3,3,3,3,3,3,3,3,2,2,1,1,0], // Wed
+    [0,0,0,0,0,0,1,1,2,2,3,3,3,2,2,3,3,3,2,2,1,1,0,0], // Thu
+    [0,0,0,0,0,0,1,1,2,2,2,2,3,2,2,3,2,2,2,1,1,1,0,0], // Fri
+    [0,0,0,0,0,0,0,0,1,1,1,2,2,2,1,1,1,1,1,1,0,0,0,0], // Sat
+    [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0]  // Sun
+  ];
+  const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   // Features list
   const features = [
@@ -195,104 +199,191 @@ export default function Home() {
           </motion.form>
         </div>
 
-        {/* Demo Preview Cards (Collectible Profile Showcases) */}
-        <div className="mt-28">
-          <div className="text-center mb-12">
-            <h2 className="font-mono text-xs tracking-[0.2em] text-neutral-600 dark:text-neutral-400 uppercase font-bold">
-              Featured Developer Profiles
+        {/* Global Live Activity Ticker Section */}
+        <div className="mt-28 space-y-16">
+          <div className="text-center">
+            <span className="font-mono text-[10px] tracking-[0.25em] text-indigo-500 dark:text-primary font-bold uppercase px-3 py-1.5 rounded-full bg-indigo-500/5 dark:bg-primary/10 border border-indigo-500/10 dark:border-primary/10 select-none">
+              Live System Telemetry
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50 mt-4 leading-none">
+              Activity Metrics & Global Insights
             </h2>
-            <p className="text-xs text-neutral-500 mt-2">
-              Select a card to explore their automatically compiled developer story dashboard.
+            <p className="text-xs text-neutral-500 dark:text-neutral-450 mt-2 max-w-md mx-auto">
+              Real-time synchronization statistics and development trends across the network.
             </p>
           </div>
 
+          {/* Grid of Global Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {demoProfiles.map((profile, i) => {
+            {globalStats.map((stat, i) => {
+              const Icon = stat.icon;
               return (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 + i * 0.08 }}
-                  onClick={() => handleDemoClick(profile.username)}
-                  className="cursor-pointer group relative h-[340px] flex flex-col"
+                  transition={{ duration: 0.4, delay: 0.2 + i * 0.05 }}
                 >
-                  {/* Glowing background mesh reflection on hover */}
-                  <div 
-                    className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500 scale-95"
-                    style={{ backgroundColor: profile.glowColor }}
-                  />
-
-                  {/* Card Main Body */}
-                  <Card className="h-full relative z-10 glass-card border border-neutral-200 dark:border-white/5 overflow-hidden flex flex-col justify-between p-5 transition-all duration-300">
-                    
-                    {/* Top Section: User Avatar & Static Ring */}
-                    <div className="flex flex-col items-center text-center space-y-3 select-none pt-2">
-                      <div className="relative h-16 w-16">
-                        <div className={`absolute -inset-1 rounded-full bg-gradient-to-tr ${
-                          profile.role === "OS Maintainer" 
-                            ? "from-yellow-400 to-amber-500" 
-                            : profile.role === "Tech Architect" 
-                              ? "from-purple-500 to-pink-500" 
-                              : "from-cyan-400 to-indigo-500"
-                        } opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300`} />
-                        <img 
-                          src={profile.avatar} 
-                          alt={profile.name} 
-                          className="h-16 w-16 rounded-full border border-background object-cover bg-neutral-900 relative z-10 shadow-md" 
-                          onError={(e) => {
-                            e.currentTarget.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${profile.username}`;
-                          }}
-                        />
+                  <Card className="glass-card border border-neutral-200 dark:border-white/5 p-6 flex flex-col justify-between h-[130px] transition-all hover:border-neutral-300 dark:hover:border-white/10 relative overflow-hidden select-none">
+                    <div className="flex justify-between items-start">
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-mono text-neutral-400 dark:text-neutral-500 font-bold uppercase tracking-wider block">
+                          {stat.label}
+                        </span>
+                        <h3 className="text-2xl font-black font-mono text-neutral-800 dark:text-neutral-100 tracking-tight">
+                          {stat.value}
+                        </h3>
                       </div>
-                      
-                      <div>
-                        <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-100 leading-none group-hover:text-indigo-600 dark:group-hover:text-primary transition-colors">{profile.name}</h3>
-                        <span className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1 block">@{profile.username}</span>
-                      </div>
-
-                      <span className={`px-2 py-0.5 rounded font-mono text-[8px] font-semibold tracking-wider ${
-                        profile.role === "OS Maintainer" 
-                          ? "text-amber-600 dark:text-amber-400 border border-amber-500/20 bg-amber-500/5" 
-                          : profile.role === "Tech Architect" 
-                            ? "text-pink-600 dark:text-pink-400 border border-pink-500/20 bg-pink-500/5" 
-                            : "text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 bg-cyan-500/5"
-                      }`}>
-                        {profile.role.toUpperCase()}
-                      </span>
-                    </div>
-
-                    {/* Middle Section: Visual 2x2 stats */}
-                    <div className="grid grid-cols-2 gap-2 py-3 border-y border-neutral-200/50 dark:border-white/5 font-mono text-[10px] select-none bg-neutral-50/50 dark:bg-white/[0.005] p-2 rounded-lg">
-                      <div className="flex flex-col pl-1.5">
-                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">COMMITS</span>
-                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5">{profile.contributions}</span>
-                      </div>
-                      <div className="flex flex-col pl-1.5 border-l border-neutral-200/50 dark:border-white/5">
-                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">STREAK</span>
-                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5">{profile.streak}</span>
-                      </div>
-                      <div className="flex flex-col pl-1.5 border-t border-neutral-200/50 dark:border-white/5 pt-2">
-                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">REPOS</span>
-                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5">{profile.repos}</span>
-                      </div>
-                      <div className="flex flex-col pl-1.5 border-l border-t border-neutral-200/50 dark:border-white/5 pt-2">
-                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">LANG</span>
-                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5 truncate block">{profile.language}</span>
+                      <div className={`p-2 rounded-lg bg-neutral-100 dark:bg-white/[0.02] border border-neutral-200/40 dark:border-white/5 ${stat.colorClass}`}>
+                        <Icon className="h-4.5 w-4.5" />
                       </div>
                     </div>
-
-                    {/* Bottom Section: Clean hover trigger */}
-                    <div className="pt-2 text-center select-none flex items-center justify-center gap-1 font-mono text-[9px] text-neutral-500 dark:text-neutral-400">
-                      <span className="group-hover:text-indigo-600 dark:group-hover:text-primary group-hover:underline transition-all flex items-center gap-1">
-                        Explore Profile Story <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                      </span>
-                    </div>
-
+                    <span className="text-[9px] font-mono text-neutral-400 dark:text-neutral-550 font-medium">
+                      {stat.subtext}
+                    </span>
                   </Card>
                 </motion.div>
               );
             })}
+          </div>
+
+          {/* Languages Distribution & Live Sync Feed */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-5xl mx-auto">
+            
+            {/* Left Column: Language Distribution */}
+            <motion.div 
+              className="lg:col-span-7"
+              initial={{ opacity: 0, x: -15 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Card className="glass-card border border-neutral-200 dark:border-white/5 p-6 h-full flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-6 select-none">
+                    <Code2 className="h-4.5 w-4.5 text-indigo-500 dark:text-primary" />
+                    <div>
+                      <h4 className="text-sm font-bold text-neutral-800 dark:text-neutral-100 leading-tight">Favorite Languages</h4>
+                      <span className="text-[9px] font-mono text-neutral-400 dark:text-neutral-500 font-bold uppercase tracking-widest block mt-0.5">Top codebase metrics analyzed</span>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 pt-2">
+                    {languageDistribution.map((lang, i) => (
+                      <div key={i} className="space-y-1.5 select-none">
+                        <div className="flex justify-between items-center text-[10px] font-mono font-bold">
+                          <span className="text-neutral-700 dark:text-neutral-300">{lang.name}</span>
+                          <span className="text-neutral-500 dark:text-neutral-450">{lang.percentage}%</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-neutral-100 dark:bg-white/[0.02] border border-neutral-200/20 dark:border-white/5 overflow-hidden">
+                          <motion.div 
+                            className={`h-full rounded-full ${lang.color}`}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${lang.percentage}%` }}
+                            transition={{ duration: 0.8, delay: 0.5 + i * 0.05 }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 border-t border-neutral-200/50 dark:border-white/5 text-[9px] font-mono text-neutral-400 dark:text-neutral-550 select-none">
+                  Telemetry samples aggregate public repository commits scanned daily.
+                </div>
+              </Card>
+            </motion.div>
+
+            {/* Right Column: Mini Activity Heatmap Preview */}
+            <motion.div 
+              className="lg:col-span-5"
+              initial={{ opacity: 0, x: 15 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Card className="glass-card border border-neutral-200 dark:border-white/5 p-6 h-full flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-6 select-none">
+                    <TrendingUp className="h-4.5 w-4.5 text-indigo-500 dark:text-primary" />
+                    <div>
+                      <h4 className="text-sm font-bold text-neutral-800 dark:text-neutral-100 leading-tight">Activity Heatmap Preview</h4>
+                      <span className="text-[9px] font-mono text-neutral-400 dark:text-neutral-500 font-bold uppercase tracking-widest block mt-0.5">Average contribution density by hour</span>
+                    </div>
+                  </div>
+
+                  {/* Heatmap Grid */}
+                  <div className="space-y-4 pt-1">
+                    <div className="flex flex-col space-y-1 bg-neutral-100/30 dark:bg-white/[0.003] p-3 rounded-lg border border-neutral-250/20 dark:border-white/5 overflow-x-auto">
+                      
+                      {/* Grid representation */}
+                      <div className="flex flex-col space-y-1 min-w-[240px]">
+                        {heatmapData.map((row, dayIdx) => (
+                          <div key={dayIdx} className="flex items-center space-x-1">
+                            {/* Day name label: only show Mon, Wed, Fri for cleanliness */}
+                            <span className="w-6 text-[8px] font-mono font-bold text-neutral-400 dark:text-neutral-650 select-none">
+                              {dayIdx % 2 === 0 ? dayNames[dayIdx] : ""}
+                            </span>
+                            
+                            {/* Row squares */}
+                            <div className="flex items-center space-x-1.5">
+                              {row.map((val, hourIdx) => (
+                                <div
+                                  key={hourIdx}
+                                  title={`${dayNames[dayIdx]} Hour ${hourIdx}: level ${val}`}
+                                  className={`w-2 h-2 rounded-xs transition-all duration-300 ${
+                                    val === 3
+                                      ? "bg-indigo-600 dark:bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]"
+                                      : val === 2
+                                        ? "bg-indigo-400/80 dark:bg-indigo-650/75"
+                                        : val === 1
+                                          ? "bg-indigo-200 dark:bg-indigo-900/40"
+                                          : "bg-neutral-200/50 dark:bg-white/[0.02]"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* X axis hours labels */}
+                      <div className="flex justify-between pl-6 text-[7px] font-mono text-neutral-400 dark:text-neutral-600 pt-1 select-none min-w-[240px]">
+                        <span>12 AM</span>
+                        <span>6 AM</span>
+                        <span>12 PM</span>
+                        <span>6 PM</span>
+                        <span>11 PM</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Summary lists */}
+                  <div className="grid grid-cols-2 gap-4 mt-6 p-4 rounded-xl bg-neutral-50/50 dark:bg-white/[0.005] border border-neutral-200/40 dark:border-white/5 select-none font-mono text-[9px] tracking-wider font-bold">
+                    <div className="space-y-1">
+                      <span className="text-neutral-400 dark:text-neutral-550 block">PEAK HOURS:</span>
+                      <span className="text-neutral-800 dark:text-neutral-200 block text-xs font-black">2 PM – 6 PM</span>
+                    </div>
+                    <div className="space-y-1 border-l border-neutral-200/50 dark:border-white/5 pl-4">
+                      <span className="text-neutral-400 dark:text-neutral-550 block">ACTIVE DAYS:</span>
+                      <span className="text-neutral-800 dark:text-neutral-200 block text-xs font-black">TUE & WED</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Heatmap Legend */}
+                <div className="pt-4 flex justify-between items-center text-[8px] font-mono text-neutral-400 dark:text-neutral-600 select-none">
+                  <span>Legend: 24h cycle metrics</span>
+                  <div className="flex items-center space-x-1">
+                    <span>Less</span>
+                    <div className="w-2 h-2 rounded-xs bg-neutral-200/50 dark:bg-white/[0.02]" />
+                    <div className="w-2 h-2 rounded-xs bg-indigo-200 dark:bg-indigo-900/40" />
+                    <div className="w-2 h-2 rounded-xs bg-indigo-400/80 dark:bg-indigo-650/75" />
+                    <div className="w-2 h-2 rounded-xs bg-indigo-600 dark:bg-indigo-500 shadow-[0_0_4px_rgba(99,102,241,0.5)]" />
+                    <span>More</span>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+
           </div>
         </div>
 
