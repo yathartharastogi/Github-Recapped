@@ -257,8 +257,8 @@ export default function ComparePage() {
                 </div>
                 <h3 className="text-base font-bold text-neutral-800 dark:text-neutral-100 mt-4 leading-tight">{data.userA.name}</h3>
                 <span className="text-xs font-mono text-indigo-500 dark:text-primary mt-1 font-bold">@{data.userA.username}</span>
-                <span className={`mt-3 px-2.5 py-0.5 rounded-full border text-[9px] font-mono tracking-widest font-black uppercase ${getLevelBadgeText(data.userA.level)}`}>
-                  LVL {data.userA.level} : {getLevelLabel(data.userA.level)}
+                <span className={`mt-3 px-2.5 py-0.5 rounded font-mono text-[9px] font-semibold tracking-wider border ${getLevelBadgeText(data.userA.level)}`}>
+                  {getLevelLabel(data.userA.level).toUpperCase()} TIER (LVL {data.userA.level})
                 </span>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -292,7 +292,7 @@ export default function ComparePage() {
                     <span className="font-bold text-neutral-800 dark:text-neutral-200 px-2 py-0.5 rounded border border-indigo-500/10 bg-indigo-500/5 text-indigo-600 dark:text-primary">{data.userA.favoriteLanguage}</span>
                   </div>
                   <div className="flex justify-between items-center border-t border-border/40 pt-3">
-                    <span className="text-neutral-600 dark:text-neutral-400 font-mono font-bold tracking-wider text-[9px]">ARCHETYPE:</span>
+                    <span className="text-neutral-600 dark:text-neutral-400 font-mono font-bold tracking-wider text-[9px]">ACTIVITY PROFILE:</span>
                     <span className="font-bold text-neutral-800 dark:text-neutral-200 text-right max-w-[170px] leading-tight">{data.userA.archetype}</span>
                   </div>
                 </div>
@@ -310,8 +310,8 @@ export default function ComparePage() {
                 </div>
                 <h3 className="text-base font-bold text-neutral-800 dark:text-neutral-100 mt-4 leading-tight">{data.userB.name}</h3>
                 <span className="text-xs font-mono text-indigo-500 dark:text-primary mt-1 font-bold">@{data.userB.username}</span>
-                <span className={`mt-3 px-2.5 py-0.5 rounded-full border text-[9px] font-mono tracking-widest font-black uppercase ${getLevelBadgeText(data.userB.level)}`}>
-                  LVL {data.userB.level} : {getLevelLabel(data.userB.level)}
+                <span className={`mt-3 px-2.5 py-0.5 rounded font-mono text-[9px] font-semibold tracking-wider border ${getLevelBadgeText(data.userB.level)}`}>
+                  {getLevelLabel(data.userB.level).toUpperCase()} TIER (LVL {data.userB.level})
                 </span>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -345,7 +345,7 @@ export default function ComparePage() {
                     <span className="font-bold text-neutral-800 dark:text-neutral-200 px-2 py-0.5 rounded border border-indigo-500/10 bg-indigo-500/5 text-indigo-600 dark:text-primary">{data.userB.favoriteLanguage}</span>
                   </div>
                   <div className="flex justify-between items-center border-t border-border/40 pt-3">
-                    <span className="text-neutral-600 dark:text-neutral-400 font-mono font-bold tracking-wider text-[9px]">ARCHETYPE:</span>
+                    <span className="text-neutral-600 dark:text-neutral-400 font-mono font-bold tracking-wider text-[9px]">ACTIVITY PROFILE:</span>
                     <span className="font-bold text-neutral-800 dark:text-neutral-200 text-right max-w-[170px] leading-tight">{data.userB.archetype}</span>
                   </div>
                 </div>

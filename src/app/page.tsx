@@ -43,52 +43,48 @@ export default function Home() {
       name: "Yathartha Rastogi",
       username: "yathartha09",
       avatar: "https://github.com/yathartha09.png",
-      level: 3,
-      levelLabel: "Creator",
+      role: "Creator",
       contributions: "1,420",
       streak: "18 days",
+      repos: "34",
       language: "TypeScript",
-      archetype: "Highly Productive Builder",
-      glowColor: "rgba(6, 182, 212, 0.25)",
+      glowColor: "rgba(6, 182, 212, 0.2)",
       bgGradient: "from-cyan-500/10 to-indigo-500/10"
     },
     {
       name: "Linus Torvalds",
       username: "torvalds",
       avatar: "https://github.com/torvalds.png",
-      level: 5,
-      levelLabel: "Veteran",
+      role: "OS Maintainer",
       contributions: "5,800+",
       streak: "45 days",
+      repos: "8",
       language: "C",
-      archetype: "Flagship Maintainer",
-      glowColor: "rgba(245, 158, 11, 0.25)",
+      glowColor: "rgba(245, 158, 11, 0.2)",
       bgGradient: "from-yellow-500/10 to-red-500/10"
     },
     {
       name: "Evan You",
       username: "yyx990803",
       avatar: "https://github.com/yyx990803.png",
-      level: 5,
-      levelLabel: "Veteran",
+      role: "Tech Architect",
       contributions: "4,200+",
       streak: "32 days",
+      repos: "184",
       language: "JavaScript",
-      archetype: "Ecosystem Architect",
-      glowColor: "rgba(167, 139, 250, 0.25)",
+      glowColor: "rgba(167, 139, 250, 0.2)",
       bgGradient: "from-purple-500/10 to-pink-500/10"
     },
     {
       name: "Dan Abramov",
       username: "gaearon",
       avatar: "https://github.com/gaearon.png",
-      level: 4,
-      levelLabel: "Architect",
+      role: "UI Engineer",
       contributions: "2,900+",
       streak: "22 days",
+      repos: "112",
       language: "React/JS",
-      archetype: "UI Specialist",
-      glowColor: "rgba(236, 72, 153, 0.25)",
+      glowColor: "rgba(236, 72, 153, 0.2)",
       bgGradient: "from-pink-500/10 to-rose-500/10"
     }
   ];
@@ -230,16 +226,16 @@ export default function Home() {
                   {/* Card Main Body */}
                   <Card className="h-full relative z-10 glass-card border border-neutral-200 dark:border-white/5 overflow-hidden flex flex-col justify-between p-5 transition-all duration-300">
                     
-                    {/* Top Section: User Avatar & Spinning Ring */}
-                    <div className="flex flex-col items-center text-center space-y-3.5 select-none pt-2">
+                    {/* Top Section: User Avatar & Static Ring */}
+                    <div className="flex flex-col items-center text-center space-y-3 select-none pt-2">
                       <div className="relative h-16 w-16">
-                        <div className={`absolute -inset-1.5 rounded-full bg-gradient-to-tr ${
-                          profile.level === 5 
-                            ? "from-yellow-400 to-red-500" 
-                            : profile.level === 4 
+                        <div className={`absolute -inset-1 rounded-full bg-gradient-to-tr ${
+                          profile.role === "OS Maintainer" 
+                            ? "from-yellow-400 to-amber-500" 
+                            : profile.role === "Tech Architect" 
                               ? "from-purple-500 to-pink-500" 
                               : "from-cyan-400 to-indigo-500"
-                        } opacity-75 blur-[1.5px] animate-spin-slow group-hover:scale-110 transition-transform duration-300`} />
+                        } opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300`} />
                         <img 
                           src={profile.avatar} 
                           alt={profile.name} 
@@ -252,40 +248,45 @@ export default function Home() {
                       
                       <div>
                         <h3 className="text-sm font-bold text-neutral-800 dark:text-neutral-100 leading-none group-hover:text-indigo-600 dark:group-hover:text-primary transition-colors">{profile.name}</h3>
-                        <span className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-0.5 block">@{profile.username}</span>
+                        <span className="text-[10px] font-mono text-neutral-500 dark:text-neutral-400 font-semibold mt-1 block">@{profile.username}</span>
                       </div>
 
-                      <span className={`px-2.5 py-0.5 rounded-full border text-[8px] font-mono tracking-widest font-black uppercase ${
-                        profile.level === 5 
-                          ? "text-yellow-600 dark:text-yellow-400 border-yellow-500/20 bg-yellow-500/5" 
-                          : profile.level === 4 
-                            ? "text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/20 bg-fuchsia-500/5" 
-                            : "text-cyan-600 dark:text-cyan-400 border-cyan-500/20 bg-cyan-500/5"
+                      <span className={`px-2 py-0.5 rounded font-mono text-[8px] font-semibold tracking-wider ${
+                        profile.role === "OS Maintainer" 
+                          ? "text-amber-600 dark:text-amber-400 border border-amber-500/20 bg-amber-500/5" 
+                          : profile.role === "Tech Architect" 
+                            ? "text-pink-600 dark:text-pink-400 border border-pink-500/20 bg-pink-500/5" 
+                            : "text-cyan-600 dark:text-cyan-400 border border-cyan-500/20 bg-cyan-500/5"
                       }`}>
-                        LVL {profile.level} : {profile.levelLabel}
+                        {profile.role.toUpperCase()}
                       </span>
                     </div>
 
-                    {/* Middle Section: Visual stats */}
-                    <div className="grid grid-cols-3 gap-1 py-3.5 border-y border-neutral-200/50 dark:border-white/5 font-mono text-[9px] text-center select-none bg-neutral-100/30 dark:bg-white/[0.005] rounded-lg">
-                      <div>
-                        <span className="block text-neutral-400 dark:text-neutral-500 text-[8px] font-bold">COMMITS</span>
-                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200">{profile.contributions}</span>
+                    {/* Middle Section: Visual 2x2 stats */}
+                    <div className="grid grid-cols-2 gap-2 py-3 border-y border-neutral-200/50 dark:border-white/5 font-mono text-[10px] select-none bg-neutral-50/50 dark:bg-white/[0.005] p-2 rounded-lg">
+                      <div className="flex flex-col pl-1.5">
+                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">COMMITS</span>
+                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5">{profile.contributions}</span>
                       </div>
-                      <div className="border-x border-neutral-200/50 dark:border-white/5">
-                        <span className="block text-neutral-400 dark:text-neutral-500 text-[8px] font-bold">STREAK</span>
-                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200">{profile.streak}</span>
+                      <div className="flex flex-col pl-1.5 border-l border-neutral-200/50 dark:border-white/5">
+                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">STREAK</span>
+                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5">{profile.streak}</span>
                       </div>
-                      <div>
-                        <span className="block text-neutral-400 dark:text-neutral-500 text-[8px] font-bold">LANG</span>
-                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 truncate block px-0.5">{profile.language}</span>
+                      <div className="flex flex-col pl-1.5 border-t border-neutral-200/50 dark:border-white/5 pt-2">
+                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">REPOS</span>
+                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5">{profile.repos}</span>
+                      </div>
+                      <div className="flex flex-col pl-1.5 border-l border-t border-neutral-200/50 dark:border-white/5 pt-2">
+                        <span className="text-neutral-400 dark:text-neutral-500 text-[8px] font-bold tracking-wider">LANG</span>
+                        <span className="font-extrabold text-neutral-800 dark:text-neutral-200 text-xs mt-0.5 truncate block">{profile.language}</span>
                       </div>
                     </div>
 
-                    {/* Bottom Section: Archetype */}
-                    <div className="pt-2 font-mono text-[8px] tracking-wider text-center select-none">
-                      <span className="text-neutral-400 dark:text-neutral-500 uppercase block font-bold">Archetype</span>
-                      <span className="font-black text-indigo-500 dark:text-primary uppercase group-hover:animate-pulse">{profile.archetype}</span>
+                    {/* Bottom Section: Clean hover trigger */}
+                    <div className="pt-2 text-center select-none flex items-center justify-center gap-1 font-mono text-[9px] text-neutral-500 dark:text-neutral-400">
+                      <span className="group-hover:text-indigo-600 dark:group-hover:text-primary group-hover:underline transition-all flex items-center gap-1">
+                        Explore Profile Story <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                      </span>
                     </div>
 
                   </Card>

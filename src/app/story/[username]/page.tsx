@@ -279,23 +279,20 @@ export default function StoryPage() {
         >
           <div className="flex items-start sm:items-center space-x-6">
             <div className="relative shrink-0 select-none">
-              {/* Spinning Level Ring */}
-              <div className={`absolute -inset-1.5 rounded-full bg-gradient-to-tr ${getLevelColorClass(level)} opacity-75 blur-[2px] animate-spin-slow`} />
+              {/* Static Accent Ring */}
+              <div className={`absolute -inset-1.5 rounded-full bg-gradient-to-tr ${getLevelColorClass(level)} opacity-60 blur-[1px]`} />
               <img 
                 src={user.avatarUrl} 
                 alt={user.name} 
                 className="h-20 w-20 rounded-full border-2 border-background object-cover bg-neutral-900 relative z-10 shadow-xl"
               />
-              <div className="absolute -bottom-1 -right-1 z-20 h-6 w-6 rounded-full bg-neutral-900 border border-white/20 flex items-center justify-center text-[10px] font-black font-mono text-white shadow-md">
-                {level}
-              </div>
             </div>
 
             <div className="space-y-1.5">
               <div className="flex flex-wrap items-center gap-2.5">
                 <h1 className="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">{user.name}</h1>
-                <span className={`px-3 py-0.5 rounded-full font-mono text-[9px] tracking-widest font-black border ${getLevelBadgeText(level)}`}>
-                  LVL {level} : {getLevelLabel(level).toUpperCase()}
+                <span className={`px-2.5 py-0.5 rounded font-mono text-[9px] font-semibold tracking-wider border ${getLevelBadgeText(level)}`}>
+                  {getLevelLabel(level).toUpperCase()} TIER (LVL {level})
                 </span>
               </div>
               <p className="text-xs text-indigo-500 dark:text-primary font-bold font-mono">@{user.username}</p>
@@ -613,8 +610,8 @@ export default function StoryPage() {
             <Card className="h-full glass-card border border-neutral-200 dark:border-white/5 flex flex-col justify-between overflow-hidden relative">
               <div>
                 <CardHeader className="bg-neutral-50/20 dark:bg-white/[0.01] border-b border-border/40 pb-4">
-                  <span className="font-mono text-[8px] tracking-widest font-black text-neutral-500 dark:text-neutral-400 uppercase block">Character Profile</span>
-                  <CardTitle className="text-xl font-bold tracking-tight">Developer Archetype</CardTitle>
+                  <span className="font-mono text-[8px] tracking-widest font-black text-neutral-500 dark:text-neutral-400 uppercase block">Activity Profile</span>
+                  <CardTitle className="text-xl font-bold tracking-tight">Coding Activity Profile</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6 space-y-6">
                   {/* Archetype Badge Illustration */}
@@ -637,7 +634,7 @@ export default function StoryPage() {
               <div className="p-5 border-t border-border/40 bg-neutral-50/30 dark:bg-white/[0.002] font-mono text-[9px] tracking-wider font-bold text-neutral-400 dark:text-neutral-500 select-none">
                 <div className="flex justify-between items-center">
                   <span>METRIC ALIGNMENT</span>
-                  <span className="text-neutral-700 dark:text-neutral-300 font-mono">LEVEL {level} / 5</span>
+                  <span className="text-neutral-700 dark:text-neutral-300 font-mono">TIER LEVEL {level} / 5</span>
                 </div>
               </div>
             </Card>

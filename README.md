@@ -1,16 +1,16 @@
 # GitHub Recapped
 
-Spotify Wrapped for Developers. Turn commits, repositories, pull requests, and contribution history into a stunning, gamified visual narrative.
+Spotify Wrapped for Developers. Turn commits, repositories, pull requests, and contribution history into a stunning, interactive visual narrative.
 
 ---
 
 ## Key Features
 
 *   **Real Public Scraper**: Fetches real daily metrics directly from public GitHub contributions without requiring personal access tokens or OAuth authorizations. Supports instant synchronization via a "Sync Live" cache bypass.
-*   **Collectible Developer Trading Cards**: Featured summaries on the home screen render as high-fidelity developer matchup trading cards with spinning gradient rings and holographic hover glows.
-*   **Gamified Tiering & Archetypes**: Automatically analyzes commit volumes to determine developer levels (1 to 5) and archetypes (e.g., *Highly Productive Builder*, *Ecosystem Architect*, *UI Specialist*).
+*   **Developer Spotlight Cards**: Featured profiles on the home screen render as high-fidelity interactive cards with elegant hover glows and detailed metric grids.
+*   **Tiering & Archetypes**: Automatically analyzes commit volumes to determine developer tiers (Level 1 to 5) and activity archetypes.
 *   **Immersive Wrapped Slide Deck**: Spotify Wrapped-style slideshow mapping out flagship codebases, active hours, streaks, and top milestones with dynamic slide transitions.
-*   **Side-by-Side Comparison Arena**: A matchup comparison board where two developers can match statistics side-by-side, highlighting metric winners with trophies.
+*   **Side-by-Side Comparison Arena**: A comparison board where two developers can compare statistics side-by-side, highlighting key metric leads.
 *   **Premium Data Visualizations**: Custom-styled Recharts elements featuring linear gradient area plots, rounded corner bar charts, custom donut legends, and glowing electric violet heatmap blocks.
 *   **High-Fidelity Glassmorphism**: Built with fluid light and dark animated background gradient meshes, letting background colors flow visibly underneath the glassmorphic panels.
 
