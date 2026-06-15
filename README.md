@@ -77,7 +77,7 @@ Spotify Wrapped for Developers. Turn commits, repositories, pull requests, and c
     ```bash
     npm run dev
     ```
-    Open [http://localhost:3001](http://localhost:3000) in your browser.
+    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
