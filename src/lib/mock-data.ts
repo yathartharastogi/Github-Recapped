@@ -264,6 +264,36 @@ export function generateDynamicStats(username: string): DeveloperStats {
     { date: "Dec 2024", title: "Scaling API backend integrations", description: `Built high-performance API structures inside ${repoList[3].name} utilizing ${secondLang}.`, type: "repo" as const }
   ];
 
+  // Calculate actual most active month based on contribution counts
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  const monthCommitCounts: Record<number, number> = {};
+  dailyHeatmap.forEach(day => {
+    const dateParts = day.date.split("-");
+    if (dateParts.length >= 2) {
+      const monthIndex = parseInt(dateParts[1]) - 1; // Convert "01"-"12" to 0-11
+      if (monthIndex >= 0 && monthIndex < 12) {
+        monthCommitCounts[monthIndex] = (monthCommitCounts[monthIndex] || 0) + day.count;
+      }
+    }
+  });
+
+  let peakMonthIndex = -1;
+  let peakMonthCommits = -1;
+  for (let m = 0; m < 12; m++) {
+    const commits = monthCommitCounts[m] || 0;
+    if (commits > peakMonthCommits) {
+      peakMonthCommits = commits;
+      peakMonthIndex = m;
+    }
+  }
+
+  const computedMostActiveMonth = peakMonthIndex !== -1 && peakMonthCommits > 0 
+    ? monthNames[peakMonthIndex] 
+    : "October";
+
   return {
     user: {
       avatarUrl: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80`, // Premium placeholder
@@ -337,7 +367,7 @@ export function generateDynamicStats(username: string): DeveloperStats {
     level,
     wrapped: {
       topProject: bestProjectName,
-      mostActiveMonth: "October",
+      mostActiveMonth: computedMostActiveMonth,
       longestStreak: longestStreak,
       biggestAchievement: totalContributions >= 500 ? "500 Contributions Milestone" : "Unstoppable Streak Champion",
       favoriteLanguage: favLang

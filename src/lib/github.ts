@@ -126,7 +126,39 @@ export async function getGitHubStoryData(username: string): Promise<DeveloperSta
   // 1. Instantly return preloaded mocks for high-fidelity demos
   if (MOCK_PROFILES[normUser]) {
     // Return a clone to prevent mutation
-    return JSON.parse(JSON.stringify(MOCK_PROFILES[normUser]));
+    const profile = JSON.parse(JSON.stringify(MOCK_PROFILES[normUser])) as DeveloperStats;
+    
+    // Recalculate most active month based on the generated daily contributions
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const monthCommitCounts: Record<number, number> = {};
+    profile.contributions.daily.forEach(day => {
+      const dateParts = day.date.split("-");
+      if (dateParts.length >= 2) {
+        const monthIndex = parseInt(dateParts[1]) - 1;
+        if (monthIndex >= 0 && monthIndex < 12) {
+          monthCommitCounts[monthIndex] = (monthCommitCounts[monthIndex] || 0) + day.count;
+        }
+      }
+    });
+
+    let peakMonthIndex = -1;
+    let peakMonthCommits = -1;
+    for (let m = 0; m < 12; m++) {
+      const commits = monthCommitCounts[m] || 0;
+      if (commits > peakMonthCommits) {
+        peakMonthCommits = commits;
+        peakMonthIndex = m;
+      }
+    }
+
+    if (peakMonthIndex !== -1 && peakMonthCommits > 0) {
+      profile.wrapped.mostActiveMonth = monthNames[peakMonthIndex];
+    }
+    
+    return profile;
   }
 
   // 2. Try fetching from public GitHub REST API
@@ -409,9 +441,39 @@ export async function getGitHubStoryData(username: string): Promise<DeveloperSta
     else if (totalContributions > 500) level = 3;
     else if (totalContributions > 150) level = 2;
 
+    // Calculate actual most active month based on contribution counts
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    const monthCommitCounts: Record<number, number> = {};
+    dailyHeatmap.forEach(day => {
+      const dateParts = day.date.split("-");
+      if (dateParts.length >= 2) {
+        const monthIndex = parseInt(dateParts[1]) - 1; // Convert "01"-"12" to 0-11
+        if (monthIndex >= 0 && monthIndex < 12) {
+          monthCommitCounts[monthIndex] = (monthCommitCounts[monthIndex] || 0) + day.count;
+        }
+      }
+    });
+
+    let peakMonthIndex = -1;
+    let peakMonthCommits = -1;
+    for (let m = 0; m < 12; m++) {
+      const commits = monthCommitCounts[m] || 0;
+      if (commits > peakMonthCommits) {
+        peakMonthCommits = commits;
+        peakMonthIndex = m;
+      }
+    }
+
+    const computedMostActiveMonth = peakMonthIndex !== -1 && peakMonthCommits > 0 
+      ? monthNames[peakMonthIndex] 
+      : "October";
+
     const wrapped = {
       topProject: bestProject.name,
-      mostActiveMonth: ["October", "June", "November", "March"][Math.floor(Math.random() * 4)],
+      mostActiveMonth: computedMostActiveMonth,
       longestStreak,
       biggestAchievement: totalContributions >= 500 ? "500 Contributions Milestone" : "Genesis Project Launch",
       favoriteLanguage
