@@ -1,6 +1,6 @@
 import { DeveloperStats, MOCK_PROFILES, generateDynamicStats, generateHeatmapData } from "./mock-data";
 
-async function fetchRealContributions(username: string): Promise<{
+async function fetchRealContributions(username: string, forceRefresh = false): Promise<{
   daily: { date: string; count: number }[];
   total: number;
   longestStreak: number;
@@ -8,9 +8,10 @@ async function fetchRealContributions(username: string): Promise<{
   averageStreak: number;
   consistencyScore: number;
 }> {
-  const res = await fetch(`https://github.com/users/${username.trim().toLowerCase()}/contributions`, {
-    next: { revalidate: 3600 }
-  });
+  const res = await fetch(
+    `https://github.com/users/${username.trim().toLowerCase()}/contributions`,
+    forceRefresh ? { cache: "no-store" } : { next: { revalidate: 3600 } }
+  );
   if (!res.ok) {
     throw new Error(`Failed to fetch contributions HTML: ${res.status}`);
   }
@@ -120,7 +121,7 @@ async function fetchRealContributions(username: string): Promise<{
  * Normalizes a GitHub username and retrieves their story statistics.
  * Integrates live GitHub REST API endpoints with robust error fallbacks.
  */
-export async function getGitHubStoryData(username: string): Promise<DeveloperStats> {
+export async function getGitHubStoryData(username: string, forceRefresh = false): Promise<DeveloperStats> {
   const normUser = username.trim().toLowerCase();
   
   // 1. Instantly return preloaded mocks for high-fidelity demos
@@ -171,7 +172,11 @@ export async function getGitHubStoryData(username: string): Promise<DeveloperSta
       headers.Authorization = `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`;
     }
 
-    const userRes = await fetch(`https://api.github.com/users/${normUser}`, { headers, next: { revalidate: 3600 } });
+    const fetchOptions: RequestInit = forceRefresh
+      ? { headers, cache: "no-store" }
+      : { headers, next: { revalidate: 3600 } };
+
+    const userRes = await fetch(`https://api.github.com/users/${normUser}`, fetchOptions);
     
     if (userRes.status === 404) {
       throw new Error("User not found");
@@ -190,7 +195,7 @@ export async function getGitHubStoryData(username: string): Promise<DeveloperSta
     const userData = await userRes.json();
 
     // Fetch user's public repositories (up to 100)
-    const reposRes = await fetch(`https://api.github.com/users/${normUser}/repos?per_page=100&sort=updated`, { headers, next: { revalidate: 3600 } });
+    const reposRes = await fetch(`https://api.github.com/users/${normUser}/repos?per_page=100&sort=updated`, fetchOptions);
     let reposData = [];
     if (reposRes.ok) {
       reposData = await reposRes.json();
@@ -269,7 +274,7 @@ export async function getGitHubStoryData(username: string): Promise<DeveloperSta
     let avgStreak = 0;
 
     try {
-      const real = await fetchRealContributions(normUser);
+      const real = await fetchRealContributions(normUser, forceRefresh);
       totalContributions = real.total;
       consistencyScore = real.consistencyScore;
       dailyHeatmap = real.daily;

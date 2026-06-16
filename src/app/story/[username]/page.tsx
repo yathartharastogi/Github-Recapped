@@ -11,7 +11,7 @@ import { TrendsChart } from "@/components/charts/trends-chart";
 import { ActiveHoursChart } from "@/components/charts/active-hours-chart";
 import { CategoriesChart } from "@/components/charts/categories-chart";
 import { DeveloperStats } from "@/lib/mock-data";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
 import { AnimatedCounter } from "@/components/ui/animated-counter";
 import {
@@ -32,7 +32,9 @@ import {
   FolderGit2,
   Shield,
   Sparkles,
-  RefreshCw
+  RefreshCw,
+  Share2,
+  X
 } from "lucide-react";
 
 const Linkedin = ({ className }: { className?: string }) => (
@@ -52,6 +54,31 @@ const Linkedin = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const getLevelLabel = (lvl: number) => {
+  const labels = ["Explorer", "Builder", "Creator", "Architect", "Veteran"];
+  return labels[Math.min(4, Math.max(0, lvl - 1))];
+};
+
+const getLevelColorClass = (lvl: number) => {
+  switch (lvl) {
+    case 5: return "from-yellow-400 via-amber-500 to-red-500 shadow-yellow-500/30"; // Veteran
+    case 4: return "from-purple-500 via-fuchsia-500 to-pink-500 shadow-fuchsia-500/30"; // Architect
+    case 3: return "from-cyan-400 via-blue-500 to-indigo-500 shadow-cyan-500/30"; // Creator
+    case 2: return "from-emerald-400 to-teal-500 shadow-emerald-500/30"; // Builder
+    default: return "from-indigo-400 to-violet-500 shadow-indigo-500/30"; // Explorer
+  }
+};
+
+const getLevelBadgeText = (lvl: number) => {
+  switch (lvl) {
+    case 5: return "text-yellow-600 dark:text-yellow-400 border-yellow-500/20 bg-yellow-500/5";
+    case 4: return "text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/20 bg-fuchsia-500/5";
+    case 3: return "text-cyan-600 dark:text-cyan-400 border-cyan-500/20 bg-cyan-500/5";
+    case 2: return "text-emerald-600 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/5";
+    default: return "text-indigo-600 dark:text-indigo-400 border-indigo-500/20 bg-indigo-500/5";
+  }
+};
+
 export default function StoryPage() {
   const params = useParams();
   const router = useRouter();
@@ -62,6 +89,390 @@ export default function StoryPage() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);
+
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [shareImgUrl, setShareImgUrl] = useState<string>("");
+  const [generatingCard, setGeneratingCard] = useState(false);
+
+  const wrapText = (ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
+    const words = text.split(" ");
+    let line = "";
+    let currentY = y;
+    
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + " ";
+      const metrics = ctx.measureText(testLine);
+      const testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        ctx.fillText(line, x, currentY);
+        line = words[n] + " ";
+        currentY += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x, currentY);
+    return currentY;
+  };
+
+  const generateShareCard = async () => {
+    if (!data) return;
+    setGeneratingCard(true);
+    setShareImgUrl("");
+    
+    try {
+      const { user, contributions, habits, archetype, level } = data;
+      const canvas = document.createElement("canvas");
+      canvas.width = 1200;
+      canvas.height = 630;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error("Could not get 2D context");
+
+      // Load avatar with CORS
+      const avatarImg = new Image();
+      avatarImg.crossOrigin = "anonymous";
+      
+      const loadImage = (img: HTMLImageElement, src: string): Promise<HTMLImageElement | null> => {
+        return new Promise((resolve) => {
+          img.onload = () => resolve(img);
+          img.onerror = () => resolve(null);
+          img.src = src;
+        });
+      };
+      
+      const loadedImg = await loadImage(avatarImg, user.avatarUrl);
+      
+      // 1. Draw Background
+      ctx.fillStyle = "#0B0F19";
+      ctx.fillRect(0, 0, 1200, 630);
+
+      // 2. Draw Cyber Grid
+      ctx.strokeStyle = "rgba(99, 102, 241, 0.03)";
+      ctx.lineWidth = 1;
+      const gridSize = 30;
+      for (let x = 0; x < 1200; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 630);
+        ctx.stroke();
+      }
+      for (let y = 0; y < 630; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(1200, y);
+        ctx.stroke();
+      }
+
+      // 3. Draw Background Radial Glows
+      let grad = ctx.createRadialGradient(0, 0, 0, 0, 0, 600);
+      grad.addColorStop(0, "rgba(99, 102, 241, 0.15)");
+      grad.addColorStop(1, "rgba(99, 102, 241, 0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 600, 0, Math.PI * 2);
+      ctx.fill();
+
+      grad = ctx.createRadialGradient(1200, 630, 0, 1200, 630, 600);
+      grad.addColorStop(0, "rgba(236, 72, 153, 0.12)");
+      grad.addColorStop(1, "rgba(236, 72, 153, 0)");
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(1200, 630, 600, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 4. Draw Inner Rounded Border
+      const borderGrad = ctx.createLinearGradient(24, 24, 1176, 606);
+      borderGrad.addColorStop(0, "rgba(99, 102, 241, 0.3)");
+      borderGrad.addColorStop(0.5, "rgba(236, 72, 153, 0.1)");
+      borderGrad.addColorStop(1, "rgba(6, 182, 212, 0.2)");
+      ctx.strokeStyle = borderGrad;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(24, 24, 1152, 582, 24);
+      ctx.stroke();
+
+      // 5. Tier Setup
+      let tierColor = "#6366f1"; // default Explorer
+      let tierGlowColor = "rgba(99, 102, 241, 0.4)";
+      switch (level) {
+        case 5:
+          tierColor = "#f59e0b"; // Veteran (Gold/Amber)
+          tierGlowColor = "rgba(245, 158, 11, 0.4)";
+          break;
+        case 4:
+          tierColor = "#d946ef"; // Architect (Fuchsia)
+          tierGlowColor = "rgba(217, 70, 239, 0.4)";
+          break;
+        case 3:
+          tierColor = "#06b6d4"; // Creator (Cyan)
+          tierGlowColor = "rgba(6, 182, 212, 0.4)";
+          break;
+        case 2:
+          tierColor = "#10b981"; // Builder (Emerald)
+          tierGlowColor = "rgba(16, 185, 129, 0.4)";
+          break;
+      }
+
+      // Radial glow behind avatar
+      const avatarGlow = ctx.createRadialGradient(180, 160, 0, 180, 160, 120);
+      avatarGlow.addColorStop(0, tierGlowColor.replace("0.4", "0.15"));
+      avatarGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = avatarGlow;
+      ctx.beginPath();
+      ctx.arc(180, 160, 120, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw Avatar glowing outer ring
+      ctx.save();
+      ctx.shadowColor = tierColor;
+      ctx.shadowBlur = 12;
+      ctx.strokeStyle = tierColor;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(180, 160, 78, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw Avatar inner border line
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(180, 160, 73, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Draw avatar image with clip path or fallback
+      if (loadedImg) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(180, 160, 70, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(loadedImg, 110, 90, 140, 140);
+        ctx.restore();
+      } else {
+        // Fallback initials gradient
+        ctx.save();
+        const avGrad = ctx.createLinearGradient(110, 90, 250, 230);
+        avGrad.addColorStop(0, "#4f46e5");
+        avGrad.addColorStop(1, "#06b6d4");
+        ctx.fillStyle = avGrad;
+        ctx.beginPath();
+        ctx.arc(180, 160, 70, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "bold 48px Inter, system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        const initials = user.name ? user.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase() : user.username.slice(0, 2).toUpperCase();
+        ctx.fillText(initials, 180, 160);
+        ctx.restore();
+      }
+
+      // 6. Profile Metadata Layout
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 36px Inter, system-ui, sans-serif";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText(user.name, 60, 290);
+
+      ctx.fillStyle = "#A78BFA";
+      ctx.font = "600 20px 'JetBrains Mono', monospace";
+      ctx.fillText("@" + user.username, 60, 325);
+
+      // Level / Tier Pill
+      const pillX = 60;
+      const pillY = 345;
+      const pillText = `LEVEL ${level} • ${getLevelLabel(level).toUpperCase()} TIER`;
+      ctx.font = "bold 11px 'JetBrains Mono', monospace";
+      const textWidth = ctx.measureText(pillText).width;
+      const pillW = textWidth + 28;
+      const pillH = 32;
+      
+      ctx.beginPath();
+      ctx.roundRect(pillX, pillY, pillW, pillH, 6);
+      ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+      ctx.fill();
+      ctx.strokeStyle = tierColor + "55"; // 33% opacity
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = tierColor;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+      ctx.fillText(pillText, pillX + 14, pillY + pillH / 2);
+
+      // Bio Text (text-wrapped)
+      ctx.fillStyle = "#9CA3AF";
+      ctx.font = "15px Inter, system-ui, sans-serif";
+      ctx.textBaseline = "top";
+      const bioText = user.bio || "No biography provided. Developer wrapped story generator.";
+      wrapText(ctx, bioText, 60, 400, 420, 22);
+
+      // Followers, Repos, Years Stats
+      ctx.fillStyle = "#6B7280";
+      ctx.font = "bold 12px 'JetBrains Mono', monospace";
+      ctx.textBaseline = "alphabetic";
+      ctx.fillText(`Followers: ${user.followers}  •  Repos: ${user.publicRepos}  •  Age: ${user.accountAgeYears}y`, 60, 520);
+
+      // 7. Right Column 2x2 Panels
+      const boxes = [
+        { label: "TOTAL CONTRIBUTIONS", val: contributions.total.toLocaleString(), color: "#8B5CF6" },
+        { label: "STARS EARNED", val: contributions.starsEarned.toLocaleString(), color: "#F59E0B" },
+        { label: "ACTIVE REPOSITORIES", val: contributions.activeReposCount.toString(), color: "#06B6D4" },
+        { label: "LONGEST STREAK", val: `${habits.streaks.longest} Days`, color: "#EC4899" }
+      ];
+
+      const boxW = 265;
+      const boxH = 110;
+      const col1X = 540;
+      const col2X = 825;
+      const row1Y = 80;
+      const row2Y = 210;
+
+      const coords = [
+        { x: col1X, y: row1Y },
+        { x: col2X, y: row1Y },
+        { x: col1X, y: row2Y },
+        { x: col2X, y: row2Y }
+      ];
+
+      boxes.forEach((box, idx) => {
+        const { x, y } = coords[idx];
+        // Draw box background
+        ctx.beginPath();
+        ctx.roundRect(x, y, boxW, boxH, 12);
+        ctx.fillStyle = "rgba(255, 255, 255, 0.025)";
+        ctx.fill();
+        
+        // Premium Linear Gradient Border matching specific indicator color
+        const boxGrad = ctx.createLinearGradient(x, y, x + boxW, y + boxH);
+        boxGrad.addColorStop(0, "rgba(255, 255, 255, 0.08)");
+        boxGrad.addColorStop(1, box.color + "33"); // 20% opacity matching dot color
+        ctx.strokeStyle = boxGrad;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Glowing dot
+        ctx.fillStyle = box.color;
+        ctx.beginPath();
+        ctx.arc(x + boxW - 20, y + 22, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Label
+        ctx.fillStyle = "#9CA3AF";
+        ctx.font = "bold 10px 'JetBrains Mono', monospace";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.fillText(box.label, x + 20, y + 20);
+
+        // Value
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "900 36px Inter, system-ui, sans-serif";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "alphabetic";
+        ctx.fillText(box.val, x + 20, y + 84);
+      });
+
+      // 8. Archetype Banner
+      const abX = 540;
+      const abY = 340;
+      const abW = 550;
+      const abH = 160;
+
+      ctx.beginPath();
+      ctx.roundRect(abX, abY, abW, abH, 16);
+      ctx.fillStyle = "rgba(99, 102, 241, 0.03)";
+      ctx.fill();
+      ctx.strokeStyle = "rgba(99, 102, 241, 0.15)";
+      ctx.stroke();
+
+      // Left glowing accent bar
+      ctx.strokeStyle = "#8B5CF6";
+      ctx.lineWidth = 4;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(abX + 2, abY + 16);
+      ctx.lineTo(abX + 2, abY + abH - 16);
+      ctx.stroke();
+      ctx.lineWidth = 1; // reset
+
+      // Archetype Badge title
+      ctx.fillStyle = "#A78BFA";
+      ctx.font = "bold 10px 'JetBrains Mono', monospace";
+      ctx.textBaseline = "top";
+      ctx.fillText("ACTIVITY ARCHETYPE", abX + 24, abY + 22);
+
+      // Archetype Name
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 24px Inter, system-ui, sans-serif";
+      ctx.fillText(archetype.name, abX + 24, abY + 44);
+
+      // Archetype Label Badge
+      const nameW = ctx.measureText(archetype.name).width;
+      const badgeX = abX + 24 + nameW + 15;
+      const badgeY = abY + 47;
+      const badgeW = 90;
+      const badgeH = 18;
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 4);
+      ctx.fillStyle = "rgba(139, 92, 246, 0.2)";
+      ctx.fill();
+      
+      ctx.fillStyle = "#C084FC";
+      ctx.font = "bold 8px 'JetBrains Mono', monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(archetype.label.toUpperCase(), badgeX + badgeW / 2, badgeY + badgeH / 2);
+      ctx.textAlign = "left"; // reset
+
+      // Archetype Description
+      ctx.fillStyle = "#9CA3AF";
+      ctx.font = "13px Inter, system-ui, sans-serif";
+      ctx.textBaseline = "top";
+      wrapText(ctx, archetype.description, abX + 24, abY + 84, 500, 18);
+
+      // 9. Watermark Footer
+      // Logo shape
+      const logoX = 60;
+      const logoY = 575;
+      ctx.save();
+      // Concentric circles
+      ctx.strokeStyle = "#8b5cf6";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(logoX, logoY, 8, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = "#ec4899";
+      ctx.beginPath();
+      ctx.arc(logoX, logoY, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = "bold 14px Inter, system-ui, sans-serif";
+      ctx.textBaseline = "middle";
+      ctx.fillText("GitHub Recapped", logoX + 18, logoY - 8);
+
+      ctx.fillStyle = "#4B5563";
+      ctx.font = "9px 'JetBrains Mono', monospace";
+      ctx.fillText("github-recapped.vercel.app", logoX + 18, logoY + 8);
+
+      // Right stamp
+      ctx.fillStyle = "#4B5563";
+      ctx.font = "bold 12px 'JetBrains Mono', monospace";
+      ctx.textAlign = "right";
+      ctx.fillText("2026 Developer Wrapped", 1090, logoY);
+
+      const url = canvas.toDataURL("image/png");
+      setShareImgUrl(url);
+    } catch (e) {
+      console.error("Failed to generate share card", e);
+    } finally {
+      setGeneratingCard(false);
+    }
+  };
+
 
   // Stagger animation states
   const containerVariants = {
@@ -86,7 +497,7 @@ export default function StoryPage() {
       return Math.random() * (max - min) + min;
     }
 
-    const interval: any = setInterval(function() {
+    const interval = setInterval(function() {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
@@ -149,31 +560,7 @@ export default function StoryPage() {
     router.push(`/wrapped/${username}`);
   };
 
-  const getLevelLabel = (lvl: number) => {
-    const labels = ["Explorer", "Builder", "Creator", "Architect", "Veteran"];
-    return labels[Math.min(4, Math.max(0, lvl - 1))];
-  };
 
-  // Tier color mapper for avatars and badges
-  const getLevelColorClass = (lvl: number) => {
-    switch (lvl) {
-      case 5: return "from-yellow-400 via-amber-500 to-red-500 shadow-yellow-500/30"; // Veteran
-      case 4: return "from-purple-500 via-fuchsia-500 to-pink-500 shadow-fuchsia-500/30"; // Architect
-      case 3: return "from-cyan-400 via-blue-500 to-indigo-500 shadow-cyan-500/30"; // Creator
-      case 2: return "from-emerald-400 to-teal-500 shadow-emerald-500/30"; // Builder
-      default: return "from-indigo-400 to-violet-500 shadow-indigo-500/30"; // Explorer
-    }
-  };
-
-  const getLevelBadgeText = (lvl: number) => {
-    switch (lvl) {
-      case 5: return "text-yellow-600 dark:text-yellow-400 border-yellow-500/20 bg-yellow-500/5";
-      case 4: return "text-fuchsia-600 dark:text-fuchsia-400 border-fuchsia-500/20 bg-fuchsia-500/5";
-      case 3: return "text-cyan-600 dark:text-cyan-400 border-cyan-500/20 bg-cyan-500/5";
-      case 2: return "text-emerald-600 dark:text-emerald-400 border-emerald-500/20 bg-emerald-500/5";
-      default: return "text-indigo-600 dark:text-indigo-400 border-indigo-500/20 bg-indigo-500/5";
-    }
-  };
 
   const getAchievementIcon = (iconName: string) => {
     switch (iconName) {
@@ -320,6 +707,10 @@ export default function StoryPage() {
             <Button variant="outline" size="sm" onClick={() => router.push(`/compare?userA=${user.username}`)} className="flex-1 md:flex-none flex items-center justify-center gap-1.5 font-mono text-[10px] tracking-wider font-bold hover:border-neutral-400 dark:hover:border-neutral-700 transition-all duration-300 rounded-lg py-4">
               <GitCommit className="h-3.5 w-3.5 text-neutral-400" />
               <span>COMPARE</span>
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => { setIsShareModalOpen(true); generateShareCard(); }} className="flex-1 md:flex-none flex items-center justify-center gap-1.5 font-mono text-[10px] tracking-wider font-bold border-neutral-200 dark:border-white/5 hover:border-indigo-500/30 dark:hover:border-primary/30 transition-all duration-300 rounded-lg py-4">
+              <Share2 className="h-3.5 w-3.5 text-neutral-400 dark:text-primary" />
+              <span>SHARE CARD</span>
             </Button>
           </div>
         </motion.div>
@@ -747,6 +1138,100 @@ export default function StoryPage() {
         </motion.div>
 
       </main>
+
+      {/* Share Modal overlay */}
+      <AnimatePresence>
+        {isShareModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsShareModalOpen(false)}
+              className="absolute inset-0 bg-neutral-950/75 backdrop-blur-md"
+            />
+            
+            {/* Modal Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              className="bg-neutral-950 border border-neutral-800 rounded-2xl w-full max-w-4xl p-6 relative z-10 shadow-[0_0_50px_rgba(99,102,241,0.25)] overflow-hidden"
+            >
+              {/* Background glowing blob */}
+              <div className="absolute top-0 right-0 w-[200px] h-[200px] rounded-full bg-indigo-500/10 blur-[80px] pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-[200px] h-[200px] rounded-full bg-pink-500/10 blur-[80px] pointer-events-none" />
+
+              <div className="flex justify-between items-center pb-4 border-b border-white/5 select-none relative z-10">
+                <div className="space-y-0.5">
+                  <h2 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                    <Share2 className="h-5 w-5 text-indigo-400" />
+                    <span>Developer Wrapped Share Card</span>
+                  </h2>
+                  <p className="text-xs text-neutral-400">Preview and download your personalized high-resolution story card.</p>
+                </div>
+                <button
+                  onClick={() => setIsShareModalOpen(false)}
+                  className="p-1.5 rounded-lg border border-neutral-800 hover:border-neutral-700 bg-white/[0.02] text-neutral-400 hover:text-white transition-all cursor-pointer"
+                >
+                  <X className="h-4.5 w-4.5" />
+                </button>
+              </div>
+
+              <div className="py-6 flex flex-col items-center justify-center min-h-[300px] relative z-10">
+                {generatingCard || !shareImgUrl ? (
+                  <div className="flex flex-col items-center justify-center space-y-4">
+                    <div className="h-10 w-10 rounded-full border-2 border-indigo-500 border-t-transparent animate-spin" />
+                    <p className="text-xs text-neutral-400 font-mono">COMPILED SCORECARD GRAPHICS...</p>
+                  </div>
+                ) : (
+                  <div className="w-full relative group rounded-xl overflow-hidden border border-neutral-800 shadow-2xl bg-neutral-900">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={shareImgUrl}
+                      alt="Developer Share Card"
+                      className="w-full h-auto object-contain select-none"
+                    />
+                    <div className="absolute inset-0 bg-neutral-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none select-none">
+                      <span className="px-3 py-1.5 rounded-lg bg-neutral-900/90 text-xs font-medium text-white border border-white/10 backdrop-blur-sm">
+                        Right click or hold to copy/save image directly
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/5 select-none relative z-10">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsShareModalOpen(false)}
+                  className="rounded-lg py-4 px-5 text-xs font-mono font-bold border-neutral-800 hover:border-neutral-700 text-white"
+                >
+                  CLOSE
+                </Button>
+                <Button
+                  disabled={generatingCard || !shareImgUrl}
+                  onClick={() => {
+                    if (!shareImgUrl) return;
+                    const link = document.createElement("a");
+                    link.download = `${user.username}-wrapped-card.png`;
+                    link.href = shareImgUrl;
+                    link.click();
+                  }}
+                  className="rounded-lg bg-gradient-to-r from-indigo-600 to-purple-650 hover:opacity-95 text-white shadow-lg py-4 px-6 text-xs font-mono font-bold flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                >
+                  <Download className="h-4 w-4" />
+                  <span>DOWNLOAD PNG</span>
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

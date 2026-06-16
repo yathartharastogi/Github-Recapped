@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
   }
 
     // 2. Fetch fresh stats
-    const stats = await getGitHubStoryData(username);
+    const stats = await getGitHubStoryData(username, refresh);
 
     // 3. Generate AI story narrative text
     const storyText = await generateDeveloperStory(stats);
