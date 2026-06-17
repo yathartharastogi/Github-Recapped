@@ -7,14 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { 
-  BarChart3, 
-  Sparkles, 
-  GitBranch, 
-  Calendar, 
-  Share2, 
-  Flame, 
-  Code2, 
+import {
+  BarChart3,
+  Sparkles,
+  GitBranch,
+  Calendar,
+  Share2,
+  Flame,
+  Code2,
   Award,
   ArrowRight,
   TrendingUp,
@@ -83,13 +83,13 @@ export default function Home() {
 
   // Mock activity level density grid (7 days, 24 hours)
   const heatmapData = [
-    [0,0,0,0,0,0,1,1,2,2,2,3,3,2,2,3,3,3,2,2,1,1,0,0], // Mon
-    [0,0,0,0,0,1,1,2,2,2,3,3,3,3,3,3,3,3,2,2,2,1,0,0], // Tue
-    [0,0,0,0,0,1,1,2,3,3,3,3,3,3,3,3,3,3,3,2,2,1,1,0], // Wed
-    [0,0,0,0,0,0,1,1,2,2,3,3,3,2,2,3,3,3,2,2,1,1,0,0], // Thu
-    [0,0,0,0,0,0,1,1,2,2,2,2,3,2,2,3,2,2,2,1,1,1,0,0], // Fri
-    [0,0,0,0,0,0,0,0,1,1,1,2,2,2,1,1,1,1,1,1,0,0,0,0], // Sat
-    [0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0]  // Sun
+    [0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 2, 2, 3, 3, 3, 2, 2, 1, 1, 0, 0], // Mon
+    [0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 1, 0, 0], // Tue
+    [0, 0, 0, 0, 0, 1, 1, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 1, 1, 0], // Wed
+    [0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 3, 2, 2, 3, 3, 3, 2, 2, 1, 1, 0, 0], // Thu
+    [0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 2, 2, 3, 2, 2, 3, 2, 2, 2, 1, 1, 1, 0, 0], // Fri
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0], // Sat
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]  // Sun
   ];
   const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -144,7 +144,7 @@ export default function Home() {
             </span>
           </motion.div>
 
-          <motion.h1 
+          <motion.h1
             className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50 leading-none"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -154,7 +154,7 @@ export default function Home() {
             <span className="text-neutral-500 dark:text-neutral-400">Let&apos;s Tell It.</span>
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             className="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto font-sans leading-relaxed"
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -164,7 +164,7 @@ export default function Home() {
           </motion.p>
 
           {/* Search form */}
-          <motion.form 
+          <motion.form
             onSubmit={handleSubmit}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto pt-6 select-none"
             initial={{ opacity: 0, y: 15 }}
@@ -249,9 +249,9 @@ export default function Home() {
 
           {/* Languages Distribution & Live Sync Feed */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-5xl mx-auto">
-            
+
             {/* Left Column: Language Distribution */}
-            <motion.div 
+            <motion.div
               className="lg:col-span-7"
               initial={{ opacity: 0, x: -15 }}
               animate={{ opacity: 1, x: 0 }}
@@ -275,7 +275,7 @@ export default function Home() {
                           <span className="text-neutral-500 dark:text-neutral-450">{lang.percentage}%</span>
                         </div>
                         <div className="h-2 w-full rounded-full bg-neutral-100 dark:bg-white/[0.02] border border-neutral-200/20 dark:border-white/5 overflow-hidden">
-                          <motion.div 
+                          <motion.div
                             className={`h-full rounded-full ${lang.color}`}
                             initial={{ width: 0 }}
                             animate={{ width: `${lang.percentage}%` }}
@@ -294,7 +294,7 @@ export default function Home() {
             </motion.div>
 
             {/* Right Column: Mini Activity Heatmap Preview */}
-            <motion.div 
+            <motion.div
               className="lg:col-span-5"
               initial={{ opacity: 0, x: 15 }}
               animate={{ opacity: 1, x: 0 }}
@@ -313,7 +313,7 @@ export default function Home() {
                   {/* Heatmap Grid */}
                   <div className="space-y-4 pt-1">
                     <div className="flex flex-col space-y-1 bg-neutral-100/30 dark:bg-white/[0.003] p-3 rounded-lg border border-neutral-250/20 dark:border-white/5 overflow-x-auto">
-                      
+
                       {/* Grid representation */}
                       <div className="flex flex-col space-y-1 min-w-[240px]">
                         {heatmapData.map((row, dayIdx) => (
@@ -322,22 +322,21 @@ export default function Home() {
                             <span className="w-6 text-[8px] font-mono font-bold text-neutral-400 dark:text-neutral-650 select-none">
                               {dayIdx % 2 === 0 ? dayNames[dayIdx] : ""}
                             </span>
-                            
+
                             {/* Row squares */}
                             <div className="flex items-center space-x-1.5">
                               {row.map((val, hourIdx) => (
                                 <div
                                   key={hourIdx}
                                   title={`${dayNames[dayIdx]} Hour ${hourIdx}: level ${val}`}
-                                  className={`w-2 h-2 rounded-xs transition-all duration-300 ${
-                                    val === 3
+                                  className={`w-2 h-2 rounded-xs transition-all duration-300 ${val === 3
                                       ? "bg-indigo-600 dark:bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.6)]"
                                       : val === 2
                                         ? "bg-indigo-400/80 dark:bg-indigo-650/75"
                                         : val === 1
                                           ? "bg-indigo-200 dark:bg-indigo-900/40"
                                           : "bg-neutral-200/50 dark:bg-white/[0.02]"
-                                  }`}
+                                    }`}
                                 />
                               ))}
                             </div>
@@ -355,7 +354,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Summary lists */}
                   <div className="grid grid-cols-2 gap-4 mt-6 p-4 rounded-xl bg-neutral-50/50 dark:bg-white/[0.005] border border-neutral-200/40 dark:border-white/5 select-none font-mono text-[9px] tracking-wider font-bold">
                     <div className="space-y-1">
@@ -414,7 +413,7 @@ export default function Home() {
               );
             })}
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-3xl mx-auto">
             {features.slice(3).map((feat, i) => {
               const Icon = feat.icon;
@@ -451,7 +450,7 @@ export default function Home() {
               @yathartharastogi
             </a>
             <span className="text-neutral-300 dark:text-neutral-800">|</span>
-            <span>Elegant premium design.</span>
+            <span>Built for developers.</span>
           </div>
         </div>
       </footer>
