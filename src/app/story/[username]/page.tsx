@@ -459,10 +459,14 @@ export default function StoryPage() {
       ctx.fillText("github-recapped.vercel.app", logoX + 18, logoY + 8);
 
       // Right stamp
-      ctx.fillStyle = "#4B5563";
-      ctx.font = "bold 12px 'JetBrains Mono', monospace";
+      ctx.fillStyle = "#9CA3AF";
+      ctx.font = "bold 11px 'JetBrains Mono', monospace";
       ctx.textAlign = "right";
-      ctx.fillText("2026 Developer Wrapped", 1090, logoY);
+      ctx.fillText("Created by @yathartharastogi", 1090, logoY - 8);
+
+      ctx.fillStyle = "#4B5563";
+      ctx.font = "9px 'JetBrains Mono', monospace";
+      ctx.fillText("2026 Developer Wrapped", 1090, logoY + 8);
 
       const url = canvas.toDataURL("image/png");
       setShareImgUrl(url);

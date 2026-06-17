@@ -23,10 +23,19 @@ export function Navbar() {
         <nav className="flex items-center space-x-6">
           <Link
             href="/compare"
-            className="text-xs font-bold font-mono text-muted-foreground hover:text-foreground hover:shadow-[0_0_8px_rgba(139,92,246,0.15)] transition-all duration-200 uppercase tracking-wider"
+            className="text-xs font-bold font-mono text-muted-foreground hover:text-foreground transition-all duration-200 uppercase tracking-wider"
           >
             Compare
           </Link>
+
+          <a
+            href="https://github.com/yathartharastogi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[10px] font-bold font-mono text-indigo-600 hover:text-indigo-500 dark:text-primary dark:hover:text-primary/80 transition-all duration-200 uppercase tracking-wider flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-indigo-500/5 dark:bg-primary/10 border border-indigo-500/10 dark:border-primary/10 hover:border-indigo-500/20 dark:hover:border-primary/20 select-none"
+          >
+            by @yathartharastogi
+          </a>
           
           <Button
             variant="ghost"

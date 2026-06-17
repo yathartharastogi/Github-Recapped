@@ -15,37 +15,41 @@ export async function GET(request: NextRequest) {
     const normUsername = username.trim().toLowerCase();
     const refresh = searchParams.get("refresh") === "true";
 
+    const headers = {
+      "Cache-Control": "no-store, max-age=0, must-revalidate",
+    };
+
     // 1. Check if cached in DB (if not forcing a refresh)
     if (!refresh) {
       const cachedStory = await safeDb.getStory(normUsername);
       if (cachedStory) {
         try {
           const stats = JSON.parse(cachedStory.stats);
-        return NextResponse.json({
-          user: stats.user,
-          contributions: stats.contributions,
-          habits: stats.habits,
-          projects: stats.projects,
-          timeline: stats.timeline,
-          achievements: stats.achievements,
-          archetype: stats.archetype || { name: cachedStory.archetype, description: "Professional developer profile", label: cachedStory.archetype },
-          level: cachedStory.level,
-          storyText: cachedStory.storyText,
-          wrapped: stats.wrapped || {
-            topProject: stats.projects.bestProject.name,
-            mostActiveMonth: "October",
-            longestStreak: stats.habits.streaks.longest,
-            biggestAchievement: "500 Contributions Milestone",
-            favoriteLanguage: stats.projects.bestProject.language
-          },
-          cached: true,
-          createdAt: cachedStory.createdAt
-        });
-      } catch (err) {
-        console.error("Failed to parse cached stats JSON, recalculating...", err);
+          return NextResponse.json({
+            user: stats.user,
+            contributions: stats.contributions,
+            habits: stats.habits,
+            projects: stats.projects,
+            timeline: stats.timeline,
+            achievements: stats.achievements,
+            archetype: stats.archetype || { name: cachedStory.archetype, description: "Professional developer profile", label: cachedStory.archetype },
+            level: cachedStory.level,
+            storyText: cachedStory.storyText,
+            wrapped: stats.wrapped || {
+              topProject: stats.projects.bestProject.name,
+              mostActiveMonth: "October",
+              longestStreak: stats.habits.streaks.longest,
+              biggestAchievement: "500 Contributions Milestone",
+              favoriteLanguage: stats.projects.bestProject.language
+            },
+            cached: true,
+            createdAt: cachedStory.createdAt
+          }, { headers });
+        } catch (err) {
+          console.error("Failed to parse cached stats JSON, recalculating...", err);
+        }
       }
     }
-  }
 
     // 2. Fetch fresh stats
     const stats = await getGitHubStoryData(username, refresh);
@@ -69,7 +73,7 @@ export async function GET(request: NextRequest) {
       storyText,
       cached: false,
       createdAt: saved.createdAt
-    });
+    }, { headers });
 
   } catch (error: any) {
     console.error("API error generating story:", error);
