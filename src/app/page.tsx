@@ -440,8 +440,18 @@ export default function Home() {
           <div>
             &copy; {new Date().getFullYear()} GitHub Activity Story.
           </div>
-          <div className="mt-3 sm:mt-0">
-            Built for developers. Elegant premium design.
+          <div className="mt-3 sm:mt-0 flex items-center gap-1.5 select-none">
+            <span>Built by</span>
+            <a
+              href="https://github.com/yathartharastogi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-600 dark:text-neutral-300 hover:text-indigo-500 dark:hover:text-primary transition-colors font-bold"
+            >
+              @yathartharastogi
+            </a>
+            <span className="text-neutral-300 dark:text-neutral-800">|</span>
+            <span>Elegant premium design.</span>
           </div>
         </div>
       </footer>
